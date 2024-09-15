@@ -1,14 +1,14 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include "../Domain/Cube.h"
 
 int main()
 {
 	double side;
 	setlocale(LC_ALL, "Russian");
-	std::cout << "Ââåäèòå ñòîðîíó êóáà\n";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÑÑ‚Ð¾Ñ€Ð¾Ð½Ñƒ ÐºÑƒÐ±Ð°\n";
 	std::cin >> side;
 	Cube cube{ side };
-	std::cout << "Ñîçäàí êóá: " << cube << "\n";
-	std::cout << "Îáúåì êóáà: " << cube.GetVolume() << "\n";
-	std::cout << "Ïëîùàäü ïîâåðõíîñòè êóáà: " << cube.GetSurfaceArea() << std::endl;
+	std::cout << "Ð¡Ð¾Ð·Ð´Ð°Ð½ ÐºÑƒÐ±: " << cube << "\n";
+	std::cout << "ÐžÐ±ÑŠÐµÐ¼ ÐºÑƒÐ±Ð°: " << cube.GetVolume() << "\n";
+	std::cout << "ÐŸÐ»Ð¾Ñ‰Ð°Ð´ÑŒ Ð¿Ð¾Ð²ÐµÑ€Ñ…Ð½Ð¾ÑÑ‚Ð¸ ÐºÑƒÐ±Ð°: " << cube.GetSurfaceArea() << std::endl;
 }

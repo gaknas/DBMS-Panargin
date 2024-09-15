@@ -1,11 +1,11 @@
-#include "Cube.h"
+ï»¿#include "Cube.h"
 #include <stdexcept>
 
 Cube::Cube(const double side)
 {
 	if (side < 0)
 	{
-		throw std::out_of_range("Ñòîðîíà êóáà íå ìîæåò áûòü îòðèöàòåëüíîé");
+		throw std::out_of_range("Ð¡Ñ‚Ð¾Ñ€Ð¾Ð½Ð° ÐºÑƒÐ±Ð° Ð½Ðµ Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ Ð¾Ñ‚Ñ€Ð¸Ñ†Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾Ð¹");
 	}
 	this->side = side;
 }
@@ -13,7 +13,7 @@ Cube::Cube(const double side)
 std::string Cube::ToString() const
 {
 	std::stringstream buffer{};
-	buffer << "Êóá{ñòîðîíà: " << this->side << "}";
+	buffer << "ÐšÑƒÐ±{ÑÑ‚Ð¾Ñ€Ð¾Ð½Ð°: " << this->side << "}";
 	return buffer.str();
 }
 

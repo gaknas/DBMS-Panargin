@@ -1,4 +1,4 @@
-#include "BTree.h"
+ï»¿#include "BTree.h"
 BTree::BTree()
 {
 	this->root = nullptr;
@@ -50,7 +50,7 @@ BNode* BTree::recursive_insert(BNode* n, int key)
 {
 	if (n->key == key)
 	{
-		throw std::invalid_argument("Â äåğåâå íå ìîæåò áûòü äâóõ óçëîâ ñ îäèíàêîâûì çíà÷åíèåì");
+		throw std::invalid_argument("Ğ’ Ğ´ĞµÑ€ĞµĞ²Ğµ Ğ½Ğµ Ğ¼Ğ¾Ğ¶ĞµÑ‚ Ğ±Ñ‹Ñ‚ÑŒ Ğ´Ğ²ÑƒÑ… ÑƒĞ·Ğ»Ğ¾Ğ² Ñ Ğ¾Ğ´Ğ¸Ğ½Ğ°ĞºĞ¾Ğ²Ñ‹Ğ¼ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸ĞµĞ¼");
 	}
 	if ((n->key > key) && (n->left == nullptr))
 	{
@@ -78,7 +78,7 @@ BNode* BTree::find_item(int key)
 {
 	if (this->root == nullptr)
 	{
-		throw std::logic_error("Äåğåâî ïóñòîå");
+		throw std::logic_error("Ğ”ĞµÑ€ĞµĞ²Ğ¾ Ğ¿ÑƒÑÑ‚Ğ¾Ğµ");
 	}
 	else
 	{
@@ -102,7 +102,7 @@ BNode* BTree::recursive_find(BNode* n, int key)
 	}
 	else
 	{
-		throw std::invalid_argument("Íåò ıëåìåíòà ñ òàêèì çíà÷åíèåì");
+		throw std::invalid_argument("ĞĞµÑ‚ ÑĞ»ĞµĞ¼ĞµĞ½Ñ‚Ğ° Ñ Ñ‚Ğ°ĞºĞ¸Ğ¼ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸ĞµĞ¼");
 	}
 }
 
@@ -122,7 +122,7 @@ void BTree::delete_item(int key)
 {
 	if (this->root == nullptr)
 	{
-		throw std::logic_error("Äåğåâî ïóñòîå");
+		throw std::logic_error("Ğ”ĞµÑ€ĞµĞ²Ğ¾ Ğ¿ÑƒÑÑ‚Ğ¾Ğµ");
 	}
 	else if ((this->root->left == nullptr) && (this->root->right == nullptr) && (this->root->key == key))
 	{
@@ -131,7 +131,7 @@ void BTree::delete_item(int key)
 	}
 	else if ((this->root->left == nullptr) && (this->root->right == nullptr) && (this->root->key != key))
 	{
-		throw std::invalid_argument("Íåò ıëåìåíòà ñ òàêèì çíà÷åíèåì");
+		throw std::invalid_argument("ĞĞµÑ‚ ÑĞ»ĞµĞ¼ĞµĞ½Ñ‚Ğ° Ñ Ñ‚Ğ°ĞºĞ¸Ğ¼ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸ĞµĞ¼");
 	}
 	else if (this->root->key == key)
 	{

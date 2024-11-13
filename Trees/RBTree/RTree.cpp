@@ -1,4 +1,4 @@
-#include "RTree.h"
+ï»¿#include "RTree.h"
 
 RTree::RTree()
 {
@@ -186,7 +186,7 @@ RNode* RTree::recursive_insert(RNode* n, int key)
 {
 	if (n->key == key)
 	{
-		throw std::invalid_argument("Â äåðåâå íå ìîæåò áûòü äâóõ óçëîâ ñ îäèíàêîâûì çíà÷åíèåì");
+		throw std::invalid_argument("Ð’ Ð´ÐµÑ€ÐµÐ²Ðµ Ð½Ðµ Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ Ð´Ð²ÑƒÑ… ÑƒÐ·Ð»Ð¾Ð² Ñ Ð¾Ð´Ð¸Ð½Ð°ÐºÐ¾Ð²Ñ‹Ð¼ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸ÐµÐ¼");
 	}
 	if ((n->key > key) && (n->left == nullptr))
 	{
@@ -214,7 +214,7 @@ RNode* RTree::find_item(int key)
 {
 	if (this->root == nullptr)
 	{
-		throw std::logic_error("Äåðåâî ïóñòîå");
+		throw std::logic_error("Ð”ÐµÑ€ÐµÐ²Ð¾ Ð¿ÑƒÑÑ‚Ð¾Ðµ");
 	}
 	else
 	{
@@ -238,7 +238,7 @@ RNode* RTree::recursive_find(RNode* n, int key)
 	}
 	else
 	{
-		throw std::invalid_argument("Íåò ýëåìåíòà ñ òàêèì çíà÷åíèåì");
+		throw std::invalid_argument("ÐÐµÑ‚ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð° Ñ Ñ‚Ð°ÐºÐ¸Ð¼ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸ÐµÐ¼");
 	}
 }
 
@@ -258,7 +258,7 @@ void RTree::delete_item(int key)
 {
 	if (this->root == nullptr)
 	{
-		throw std::logic_error("Äåðåâî ïóñòîå");
+		throw std::logic_error("Ð”ÐµÑ€ÐµÐ²Ð¾ Ð¿ÑƒÑÑ‚Ð¾Ðµ");
 	}
 	else if ((this->root->left == nullptr) && (this->root->right == nullptr) && (this->root->key == key))
 	{
@@ -267,7 +267,7 @@ void RTree::delete_item(int key)
 	}
 	else if ((this->root->left == nullptr) && (this->root->right == nullptr) && (this->root->key != key))
 	{
-		throw std::invalid_argument("Íåò ýëåìåíòà ñ òàêèì çíà÷åíèåì");
+		throw std::invalid_argument("ÐÐµÑ‚ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð° Ñ Ñ‚Ð°ÐºÐ¸Ð¼ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸ÐµÐ¼");
 	}
 	else if (this->root->key == key)
 	{
@@ -384,7 +384,7 @@ void RTree::replace_node(RNode* n, RNode* child) {
 void RTree::delete_one_child(struct RNode* n)
 {
 	/*
-	 * Óñëîâèå: n èìååò íå áîëåå îäíîãî íåíóëåâîãî ïîòîìêà.
+	 * Ð£ÑÐ»Ð¾Ð²Ð¸Ðµ: n Ð¸Ð¼ÐµÐµÑ‚ Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ð½ÐµÐ½ÑƒÐ»ÐµÐ²Ð¾Ð³Ð¾ Ð¿Ð¾Ñ‚Ð¾Ð¼ÐºÐ°.
 	 */
 	if (n->color == node_colors::RED)
 	{

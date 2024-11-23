@@ -1,14 +1,64 @@
 ﻿#include "RTree.h"
 
-RTree::RTree()
-{
-	this->root = nullptr;
-}
+RTree::RTree() : root{ nullptr } {}
 
-RTree::RTree(int root)
+RTree::RTree(int root) 
 {
 	this->root = new RNode{ root };
 	this->insert_case1(this->root);
+}
+
+RTree::RTree(std::initializer_list<int> list) : RTree::RTree()
+{
+	for (int it : list)
+	{
+		this->insert_item(it);
+	}
+}
+
+RTree::RTree(RTree& other) : RTree::RTree()
+{
+	this->root = new RNode(other.root);
+	this->recursive_copy(this->root, other.root, nullptr);
+}
+
+RTree::RTree(RTree&& other) noexcept
+{
+	this->root = other.root;
+	other.root = nullptr;
+}
+
+RTree& RTree::operator=(RTree& other)
+{
+	if (this->root != nullptr)
+		this->recursive_delete(this->root);
+	this->root = new RNode(other.root);
+	this->recursive_copy(this->root, other.root, nullptr);
+	return *this;
+}
+
+RTree& RTree::operator=(RTree&& other) noexcept
+{
+	if (this->root != nullptr)
+		this->recursive_delete(this->root);
+	this->root = other.root;
+	other.root = nullptr;
+	return *this;
+}
+
+bool RTree::operator==(RTree& other)
+{
+	return recursive_compare(this->root, other.root);
+}
+
+bool RTree::recursive_compare(RNode* current, RNode* other)
+{
+	if (current == nullptr && other == nullptr)
+		return true;
+	else if ((current == nullptr && other != nullptr) || (current != nullptr && other == nullptr))
+		return false;
+	else
+		return ((current->key == other->key) && (current->color == other->color) && this->recursive_compare(current->left, other->left) && this->recursive_compare(current->right, other->right));
 }
 
 RNode* RTree::grandparent(RNode* n)
@@ -81,7 +131,7 @@ void RTree::rotate_right(RNode* n)
 	pivot->right = n;
 }
 
-std::string RTree::ToString(bool debug)
+std::string RTree::ToString(bool debug) const
 {
 	if (this->root == nullptr)
 	{
@@ -93,7 +143,17 @@ std::string RTree::ToString(bool debug)
 		return this->recursive_print(this->root);
 }
 
-std::string RTree::recursive_print(RNode* n)
+std::string converter(bool arg)
+{
+	return arg ? "VALID" : "INVALID";
+}
+
+std::ostream& operator << (std::ostream& os, RTree& rbt)
+{
+	return os << converter(check_three(rbt)) << " three; height: " << rbt.GetHeight() << '\n' << rbt.ToString() << '\n';
+}
+
+std::string RTree::recursive_print(RNode* n) const
 {
 	std::stringstream buffer;
 	if (!(n->left == nullptr))
@@ -107,6 +167,16 @@ std::string RTree::recursive_print(RNode* n)
 		buffer << recursive_print(n->right);
 	}
 	return buffer.str();
+}
+
+RNode* RTree::recursive_copy(RNode* current, RNode* other, RNode* parent)
+{
+	current->parent = parent;
+	if (other->left != nullptr)
+		current->left = recursive_copy(new RNode(other->left), other->left, current);
+	if (other->right != nullptr)
+		current->right = recursive_copy(new RNode(other->right), other->right, current);
+	return current;
 }
 
 void RTree::insert_item(int key)
@@ -326,39 +396,9 @@ void RTree::delete_item(int key)
 			else
 				delete_one_child(deleted_item);
 		}
-		else if ((deleted_item->left != nullptr) && (deleted_item->right == nullptr))
+		else if (((deleted_item->left != nullptr) && (deleted_item->right == nullptr)) || ((deleted_item->left == nullptr) && (deleted_item->right != nullptr)))
 		{
-			if (deleted_item->parent->left == deleted_item)
-			{
-				deleted_item->parent->left = deleted_item->left;
-				deleted_item->left->parent = deleted_item->parent;
-				deleted_item->left->color = node_colors::BLACK;
-				delete deleted_item;
-			}
-			else
-			{
-				deleted_item->parent->right = deleted_item->left;
-				deleted_item->left->parent = deleted_item->parent;
-				deleted_item->left->color = node_colors::BLACK;
-				delete deleted_item;
-			}
-		}
-		else if ((deleted_item->left == nullptr) && (deleted_item->right != nullptr))
-		{
-			if (deleted_item->parent->left == deleted_item)
-			{
-				deleted_item->parent->left = deleted_item->right;
-				deleted_item->right->parent = deleted_item->parent;
-				deleted_item->right->color = node_colors::BLACK;
-				delete deleted_item;
-			}
-			else
-			{
-				deleted_item->parent->right = deleted_item->right;
-				deleted_item->right->parent = deleted_item->parent;
-				deleted_item->right->color = node_colors::BLACK;
-				delete deleted_item;
-			}
+			delete_one_child(deleted_item);
 		}
 		else
 		{
@@ -415,7 +455,7 @@ void RTree::delete_one_child(struct RNode* n)
 	}
 	if (n == n->parent->left)
 		n->parent->left = nullptr;
-	else
+	else if (n == n->parent->right)
 		n->parent->right = nullptr;
 	delete n;
 }
@@ -541,7 +581,7 @@ void RTree::recursive_delete(RNode* n)
 	delete n;
 }
 
-std::string RTree::TestPrint(RNode* n)
+std::string RTree::TestPrint(RNode* n) const
 {
 	std::stringstream buffer;
 	buffer << n->key;

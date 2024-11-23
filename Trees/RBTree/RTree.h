@@ -14,7 +14,7 @@ private:
 	* @param n Узел, начиная с которого будет осуществляться обход дерева
 	* @return Строковое представление дерева
 	*/
-	std::string recursive_print(RNode* n);
+	std::string recursive_print(RNode* n) const;
 	/*
 	* @brief Функция, вставляющая новый узел
 	* @param n Узел, начиная с которого будет осуществляться обход дерева для вставки
@@ -29,6 +29,21 @@ private:
 	* @return Указатель на данный узел
 	*/
 	RNode* recursive_find(RNode* n, int key);
+	/*
+	* @brief Функция, рекурсивно копирующая поддерево
+	* @param current Узел, начиная с которого будет осуществляться обход дерева для копирования
+	* @param other Узел другого дерева
+	* @param parent Будущий родитель данного узла
+	* @return Указатель полученный узел
+	*/
+	RNode* recursive_copy(RNode* current, RNode* other, RNode* parent);
+	/*
+	* @brief Функция, рекурсивно сравнивающая дерево с другим
+	* @param current Узел, начиная с которого будет осуществляться обход дерева для сравнения
+	* @param other Узел другого дерева
+	* @bool результат сравнения
+	*/
+	bool recursive_compare(RNode* current, RNode* other);
 	/*
 	* @brief Функция поиска преемника узла для операции удаления
 	* @param n Узел, преемника которого необходимо найти
@@ -155,13 +170,30 @@ public:
 	* @brief Конструктор копирования
 	* @param other Копируемое дерево
 	*/
-	RTree(RTree* other);
+	RTree(RTree& other);
+	/*
+	* @brief Конструктор перемещения
+	* @param other Копируемое дерево
+	*/
+	RTree(RTree&& other) noexcept;
+	/*
+	* @brief Переопределение move оператора присваивания
+	* @param other Объект, к которому приравнивается данный
+	* @return Сам объект для множественного присваивания
+	*/
+	RTree& operator=(RTree&& other) noexcept;
+	/*
+	* @brief Переопределение оператора присваивания
+	* @param other Объект, к которому приравнивается данный
+	* @return Сам объект для множественного присваивания
+	*/
+	RTree& operator=(RTree& other);
 	/*
 	* @brief Переопределение оператора равенства
-	* @param other Объект, к которому приравнивается данный
-	* @return Сам объект для множественного равенства
+	* @param other Объект, с которым сравнивается данный
+	* @return результат сравнения
 	*/
-	RTree* operator=(RTree* other);
+	bool operator==(RTree& other);
 	/*
 	* @brief Вставка элемента в дерево
 	* @param item Вставляемый элемент
@@ -182,13 +214,15 @@ public:
 	* @brief Представляет элемент в виде строки
 	* @return Строковое представление объекта
 	*/
-	std::string ToString(bool debug=false);
-
+	std::string ToString(bool debug=false) const;
+	//функции ниже предназначены исключительно для тестирования
 	friend bool check_three(RTree& rbt);
-	std::string TestPrint(RNode* n);
+	std::string TestPrint(RNode* n) const;
 	int GetHeight() {
 		return this->calculate_height(this->root);
 	}
+	RNode* GetRoot() { return this->root; }
+	void SetRoot(RNode* new_root) { this->root = new_root; }
 };
 
 bool check_three(RTree& rbt);
@@ -196,3 +230,5 @@ bool check_case1(RNode* root);
 bool check_case2(RNode* n);
 bool check_case3(RNode* n);
 int calculate_black_height(RNode* n);
+std::string converter(bool arg);
+std::ostream& operator << (std::ostream& os, RTree& rbt);

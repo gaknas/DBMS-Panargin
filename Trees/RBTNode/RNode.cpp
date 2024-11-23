@@ -1,28 +1,16 @@
 #include "RNode.h"
 
-RNode::RNode()
+bool RNode::operator==(RNode& other)
 {
-	this->parent = nullptr;
-	this->left = nullptr;
-	this->right = nullptr;
-	this->key = 0;
-	this->color = node_colors::RED;
+	return ((this->key == other.key) &&
+		(this->color == other.color) &&
+		(this->parent == other.parent) &&
+		(this->left == other.left) &&
+		(this->right == other.right));
 }
 
-RNode::RNode(int key) : RNode()
-{
-	this->key = key;
-}
+RNode::RNode() : parent{ nullptr }, left{ nullptr }, right{ nullptr }, key{ 0 }, color{ node_colors::RED } {}
 
-RNode::RNode(const RNode* other) : RNode()
-{
-	this->key = other->key;
-	this->color = other->color;
-}
+RNode::RNode(int key) : parent{ nullptr }, left{ nullptr }, right{ nullptr }, key{ key }, color{ node_colors::RED } {}
 
-RNode::~RNode()
-{
-	this->left = nullptr;
-	this->right = nullptr;
-	this->parent = nullptr;
-}
+RNode::RNode(const RNode* other) : parent{ nullptr }, left{ nullptr }, right{ nullptr }, key{ other->key }, color{ other->color } {}

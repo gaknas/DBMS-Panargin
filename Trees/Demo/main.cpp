@@ -2,11 +2,6 @@
 #include "../RBTree/RTree.h"
 #include "../BSTree/BTree.h"
 
-std::string converter(bool arg)
-{
-	return arg ? "VALID" : "INVALID";
-}
-
 int main()
 {
 	RTree rbt(6);
@@ -17,10 +12,12 @@ int main()
 	rbt.insert_item(4);
 	rbt.insert_item(3);
 	rbt.insert_item(5);
-	std::cout << converter(check_three(rbt)) << " three; height: " << rbt.GetHeight() << '\n';
-	std::cout << rbt.ToString() << "\n";
-	rbt.delete_item(7);
-	std::cout << converter(check_three(rbt)) << " three; height: " << rbt.GetHeight() << '\n';
-	std::cout << rbt.ToString(true);
+	RTree rbt2{ 4, 2, 7, 1 };
+	RTree rbt3(rbt2);
+	rbt = std::move(rbt2);
+	std::cout << rbt;
+	std::cout << rbt3;
+	rbt3.delete_item(1);
+	std::cout << (rbt == rbt3);
 	return 0;
 }

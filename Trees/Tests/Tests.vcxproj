@@ -167,6 +167,14 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RBTNode\RBTNode.vcxproj">
+      <Project>{a5dbc4f5-fa78-43bd-9ff6-ccf8e0d946a1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RBTree\RBTree.vcxproj">
+      <Project>{01548729-35c9-4fc8-8c44-15b10fc24338}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

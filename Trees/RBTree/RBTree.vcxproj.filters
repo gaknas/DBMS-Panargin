@@ -15,13 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RBTree.h">
+    <ClCompile Include="RTree.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RTree.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RBTree.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

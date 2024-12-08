@@ -1,27 +1,24 @@
-﻿#include <string>
-#include <sstream>
-#include "RBTree.h"
-
-RBTree::RBTree()
+﻿#include "BTree.h"
+BTree::BTree()
 {
 	this->root = nullptr;
 }
 
-RBTree::RBTree(int root)
+BTree::BTree(int root)
 {
-	this->root = new node{ root };
+	this->root = new BNode{ root };
 }
 
-std::string RBTree::ToString()
+std::string BTree::ToString()
 {
 	if (this->root == nullptr)
 	{
-		return "";
+		return std::string();;
 	}
 	return this->recursive_print(this->root);
 }
 
-std::string RBTree::recursive_print(node* n)
+std::string BTree::recursive_print(BNode* n)
 {
 	std::stringstream buffer;
 	if (!(n->left == nullptr))
@@ -37,11 +34,11 @@ std::string RBTree::recursive_print(node* n)
 	return buffer.str();
 }
 
-void RBTree::insert_item(int key)
+void BTree::insert_item(int key)
 {
 	if (this->root == nullptr)
 	{
-		this->root = new node{ key };
+		this->root = new BNode{ key };
 	}
 	else
 	{
@@ -49,7 +46,7 @@ void RBTree::insert_item(int key)
 	}
 }
 
-node* RBTree::recursive_insert(node* n, int key)
+BNode* BTree::recursive_insert(BNode* n, int key)
 {
 	if (n->key == key)
 	{
@@ -57,7 +54,7 @@ node* RBTree::recursive_insert(node* n, int key)
 	}
 	if ((n->key > key) && (n->left == nullptr))
 	{
-		n->left = new node{ key };
+		n->left = new BNode{ key };
 		n->left->parent = n;
 		return n->left;
 	}
@@ -67,7 +64,7 @@ node* RBTree::recursive_insert(node* n, int key)
 	}
 	if ((n->key < key) && (n->right == nullptr))
 	{
-		n->right = new node{ key };
+		n->right = new BNode{ key };
 		n->right->parent = n;
 		return n->right;
 	}
@@ -77,7 +74,7 @@ node* RBTree::recursive_insert(node* n, int key)
 	}
 }
 
-node* RBTree::find_item(int key)
+BNode* BTree::find_item(int key)
 {
 	if (this->root == nullptr)
 	{
@@ -85,11 +82,11 @@ node* RBTree::find_item(int key)
 	}
 	else
 	{
-		return RBTree::recursive_find(this->root, key);
+		return BTree::recursive_find(this->root, key);
 	}
 }
 
-node* RBTree::recursive_find(node* n, int key)
+BNode* BTree::recursive_find(BNode* n, int key)
 {
 	if (n->key == key)
 	{
@@ -109,7 +106,7 @@ node* RBTree::recursive_find(node* n, int key)
 	}
 }
 
-node* RBTree::find_successor(node* n)
+BNode* BTree::find_successor(BNode* n)
 {
 	if (n->left == nullptr)
 	{
@@ -121,7 +118,7 @@ node* RBTree::find_successor(node* n)
 	}
 }
 
-void RBTree::delete_item(int key)
+void BTree::delete_item(int key)
 {
 	if (this->root == nullptr)
 	{
@@ -136,9 +133,48 @@ void RBTree::delete_item(int key)
 	{
 		throw std::invalid_argument("Нет элемента с таким значением");
 	}
+	else if (this->root->key == key)
+	{
+		if ((this->root->left != nullptr) && (this->root->right == nullptr))
+		{
+			BNode* temp = this->root->left;
+			temp->parent = nullptr;
+			delete this->root;
+			this->root = temp;
+		}
+		else if ((this->root->left == nullptr) && (this->root->right != nullptr))
+		{
+			BNode* temp = this->root->right;
+			temp->parent = nullptr;
+			delete this->root;
+			this->root = temp;
+		}
+		else
+		{
+			if (this->root->right->left == nullptr)
+			{
+				BNode* temp = this->root->right;
+				temp->parent = nullptr;
+				temp->left = this->root->left;
+				delete this->root;
+				this->root = temp;
+			}
+			else
+			{
+				BNode* successor = this->find_successor(this->root->right);
+				BNode* temp = new BNode(successor);
+				this->delete_item(successor->key);
+				temp->left = this->root->left;
+				temp->right = this->root->right;
+				temp->parent = nullptr;
+				delete this->root;
+				this->root = temp;
+			}
+		}
+	}
 	else
 	{
-		node* deleted_item = this->find_item(key);
+		BNode* deleted_item = this->find_item(key);
 		if ((deleted_item->left == nullptr) && (deleted_item->right == nullptr))
 		{
 			if (deleted_item->parent->left == deleted_item)
@@ -194,10 +230,14 @@ void RBTree::delete_item(int key)
 				}
 				else
 				{
-					node* successor = this->find_successor(deleted_item->right);
-					int temp = successor->key;
+					BNode* successor = this->find_successor(deleted_item->right);
+					BNode* temp = new BNode(successor);
 					this->delete_item(successor->key);
-					deleted_item->key = temp;
+					temp->left = deleted_item->left;
+					temp->right = deleted_item->right;
+					temp->parent = deleted_item->parent;
+					deleted_item->parent->left = temp;
+					delete deleted_item;
 				}
 			}
 			else
@@ -210,17 +250,21 @@ void RBTree::delete_item(int key)
 				}
 				else
 				{
-					node* successor = this->find_successor(deleted_item->right);
-					int temp = successor->key;
+					BNode* successor = this->find_successor(deleted_item->right);
+					BNode* temp = new BNode(successor);
 					this->delete_item(successor->key);
-					deleted_item->key = temp;
+					temp->left = deleted_item->left;
+					temp->right = deleted_item->right;
+					temp->parent = deleted_item->parent;
+					deleted_item->parent->right = temp;
+					delete deleted_item;
 				}
 			}
 		}
 	}
 }
 
-RBTree::~RBTree()
+BTree::~BTree()
 {
 	if (this->root != nullptr)
 	{
@@ -228,7 +272,7 @@ RBTree::~RBTree()
 	}
 }
 
-void RBTree::recursive_delete(node* n)
+void BTree::recursive_delete(BNode* n)
 {
 	if (n->left != nullptr)
 	{

@@ -7,7 +7,9 @@
 class RTree
 {
 private:
-	///Корень дерева
+	/*
+	* @brief Корень дерева
+	*/
 	RNode* root;
 	/*
 	* @brief Функция, обходящая дерево для вывода в строку
@@ -15,6 +17,12 @@ private:
 	* @return Строковое представление дерева
 	*/
 	std::string recursive_print(RNode* n) const;
+	/*
+	* @brief Находит необходимый узел дерева
+	* @param item Элемент, который необходимо найти
+	* @return Указатель на искомый узел дерева
+	*/
+	RNode* find_item(int item);
 	/*
 	* @brief Функция, вставляющая новый узел
 	* @param n Узел, начиная с которого будет осуществляться обход дерева для вставки
@@ -43,7 +51,7 @@ private:
 	* @param other Узел другого дерева
 	* @bool результат сравнения
 	*/
-	bool recursive_compare(RNode* current, RNode* other);
+	bool recursive_compare(RNode* current, RNode* other) const;
 	/*
 	* @brief Функция поиска преемника узла для операции удаления
 	* @param n Узел, преемника которого необходимо найти
@@ -152,71 +160,69 @@ private:
 
 	int calculate_height(RNode* n);
 public:
-	/// Конструктор по умолчанию, создает пустое дерево
+	/**
+	* @brief Конструктор по умолчанию, создает пустое дерево
+	*/ 
 	RTree();
-	/*
+	/**
 	* @brief Создает объект с корнем
 	* @param root Корень создаваемого дерева
 	*/
 	RTree(int root);
-	/*
+	/**
 	* @brief Создает объект из инициализирующего массива
 	* @param initializer_list инициализирующий массив
 	*/
 	RTree(std::initializer_list<int> list);
-	/// Деструктор, освобождает память объекта
+	/**
+	* @brief Деструктор, освобождает память объекта
+	*/
 	~RTree();
-	/*
+	/**
 	* @brief Конструктор копирования
 	* @param other Копируемое дерево
 	*/
-	RTree(RTree& other);
-	/*
+	RTree(const RTree& other);
+	/**
 	* @brief Конструктор перемещения
 	* @param other Копируемое дерево
 	*/
 	RTree(RTree&& other) noexcept;
-	/*
+	/**
 	* @brief Переопределение move оператора присваивания
 	* @param other Объект, к которому приравнивается данный
 	* @return Сам объект для множественного присваивания
 	*/
 	RTree& operator=(RTree&& other) noexcept;
-	/*
+	/**
 	* @brief Переопределение оператора присваивания
 	* @param other Объект, к которому приравнивается данный
 	* @return Сам объект для множественного присваивания
 	*/
-	RTree& operator=(RTree& other);
-	/*
+	RTree& operator=(const RTree& other);
+	/**
 	* @brief Переопределение оператора равенства
 	* @param other Объект, с которым сравнивается данный
 	* @return результат сравнения
 	*/
-	bool operator==(RTree& other);
-	/*
+	bool operator==(const RTree& other) const;
+	/**
 	* @brief Вставка элемента в дерево
 	* @param item Вставляемый элемент
 	*/
 	void insert_item(int item);
-	/*
+	/**
 	* @brief Удаление элемента из дерева
 	* @param item Удаляемый элемент
 	*/
 	void delete_item(int item);
-	/*
-	* @brief Находит необходимый узел дерева
-	* @param item Элемент, который необходимо найти
-	* @return Указатель на искомый узел дерева
-	*/
-	RNode* find_item(int item);
-	/*
+	/**
 	* @brief Представляет элемент в виде строки
 	* @return Строковое представление объекта
 	*/
 	std::string ToString(bool debug=false) const;
 	//функции ниже предназначены исключительно для тестирования
-	friend bool check_three(RTree& rbt);
+	friend bool check_tree(RTree& rbt);
 	std::string TestPrint(RNode* n) const;
 	int GetHeight() {
 		return this->calculate_height(this->root);
@@ -225,7 +231,7 @@ public:
 	void SetRoot(RNode* new_root) { this->root = new_root; }
 };
 
-bool check_three(RTree& rbt);
+bool check_tree(RTree& rbt);
 bool check_case1(RNode* root);
 bool check_case2(RNode* n);
 bool check_case3(RNode* n);

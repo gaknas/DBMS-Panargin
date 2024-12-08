@@ -2,7 +2,7 @@
 
 RTree::RTree() : root{ nullptr } {}
 
-RTree::RTree(int root) 
+RTree::RTree(int root) : RTree::RTree()
 {
 	this->root = new RNode{ root };
 	this->insert_case1(this->root);
@@ -16,42 +16,41 @@ RTree::RTree(std::initializer_list<int> list) : RTree::RTree()
 	}
 }
 
-RTree::RTree(RTree& other) : RTree::RTree()
+RTree::RTree(const RTree& other) : RTree::RTree()
 {
 	this->root = new RNode(other.root);
 	this->recursive_copy(this->root, other.root, nullptr);
 }
 
-RTree::RTree(RTree&& other) noexcept
+RTree::RTree(RTree&& other) noexcept : RTree::RTree()
 {
 	this->root = other.root;
 	other.root = nullptr;
 }
 
-RTree& RTree::operator=(RTree& other)
+RTree& RTree::operator=(const RTree& other)
 {
-	if (this->root != nullptr)
-		this->recursive_delete(this->root);
-	this->root = new RNode(other.root);
-	this->recursive_copy(this->root, other.root, nullptr);
+	if (other == *this)
+		return *this;
+	RTree temp(other);
+	std::swap(temp.root, this->root);
 	return *this;
 }
 
 RTree& RTree::operator=(RTree&& other) noexcept
 {
-	if (this->root != nullptr)
-		this->recursive_delete(this->root);
-	this->root = other.root;
-	other.root = nullptr;
+	if (other == *this)
+		return *this;
+	std::swap(this->root, other.root);
 	return *this;
 }
 
-bool RTree::operator==(RTree& other)
+bool RTree::operator==(const RTree& other) const
 {
 	return recursive_compare(this->root, other.root);
 }
 
-bool RTree::recursive_compare(RNode* current, RNode* other)
+bool RTree::recursive_compare(RNode* current, RNode* other) const
 {
 	if (current == nullptr && other == nullptr)
 		return true;
@@ -64,7 +63,7 @@ bool RTree::recursive_compare(RNode* current, RNode* other)
 RNode* RTree::grandparent(RNode* n)
 {
 	if (n != nullptr && n->parent != nullptr) return n->parent->parent;
-	else return nullptr;
+	return nullptr;
 	
 }
 
@@ -75,16 +74,14 @@ RNode* RTree::uncle(RNode* n)
 		return nullptr;
 	if (n->parent == g->left)
 		return g->right;
-	else
-		return g->left;
+	return g->left;
 }
 
 RNode* RTree::sibling(RNode* n)
 {
 	if (n == n->parent->left)
 		return n->parent->right;
-	else
-		return n->parent->left;
+	return n->parent->left;
 }
 
 void RTree::rotate_left(RNode* n)
@@ -139,8 +136,7 @@ std::string RTree::ToString(bool debug) const
 	}
 	if (debug)
 		return this->TestPrint(this->root);
-	else
-		return this->recursive_print(this->root);
+	return this->recursive_print(this->root);
 }
 
 std::string converter(bool arg)
@@ -150,7 +146,7 @@ std::string converter(bool arg)
 
 std::ostream& operator << (std::ostream& os, RTree& rbt)
 {
-	return os << converter(check_three(rbt)) << " three; height: " << rbt.GetHeight() << '\n' << rbt.ToString() << '\n';
+	return os << converter(check_tree(rbt)) << " three; height: " << rbt.GetHeight() << '\n' << rbt.ToString() << '\n';
 }
 
 std::string RTree::recursive_print(RNode* n) const
@@ -286,10 +282,7 @@ RNode* RTree::find_item(int key)
 	{
 		throw std::logic_error("Дерево пустое");
 	}
-	else
-	{
-		return RTree::recursive_find(this->root, key);
-	}
+	return RTree::recursive_find(this->root, key);
 }
 
 RNode* RTree::recursive_find(RNode* n, int key)
@@ -306,10 +299,7 @@ RNode* RTree::recursive_find(RNode* n, int key)
 	{
 		return this->recursive_find(n->right, key);
 	}
-	else
-	{
-		throw std::invalid_argument("Нет элемента с таким значением");
-	}
+	throw std::invalid_argument("Нет элемента с таким значением");
 }
 
 RNode* RTree::find_successor(RNode* n)
@@ -318,10 +308,7 @@ RNode* RTree::find_successor(RNode* n)
 	{
 		return n;
 	}
-	else
-	{
-		return this->find_successor(n->left);
-	}
+	return this->find_successor(n->left);
 }
 
 void RTree::delete_item(int key)
@@ -330,7 +317,7 @@ void RTree::delete_item(int key)
 	{
 		throw std::logic_error("Дерево пустое");
 	}
-	else if ((this->root->left == nullptr) && (this->root->right == nullptr) && (this->root->key == key))
+	if ((this->root->left == nullptr) && (this->root->right == nullptr) && (this->root->key == key))
 	{
 		delete this->root;
 		this->root = nullptr;
@@ -624,13 +611,12 @@ int RTree::calculate_height(RNode* n)
 	return std::max(lh, rh) + 1;
 }
 
-bool check_three(RTree& rbt)
+bool check_tree(RTree& rbt)
 {
 	RNode* root = rbt.root;
-	bool c1, c2, c3;
-	c1 = check_case1(root);
-	c2 = check_case2(root);
-	c3 = check_case3(root);
+	bool c1 = check_case1(root);
+	bool c2 = check_case2(root);
+	bool c3 = check_case3(root);
 	return c1 && c2 && c3;
 }
 
@@ -678,10 +664,9 @@ bool check_case3(RNode* n)
 {
 	if (n == nullptr)
 		return true;
-	bool ns, ls, rs;
-	ls = check_case3(n->left);
-	rs = check_case3(n->right);
-	ns = (calculate_black_height(n->left) == calculate_black_height(n->right));
+	bool ns = (calculate_black_height(n->left) == calculate_black_height(n->right));
+	bool ls = check_case3(n->left);
+	bool rs = check_case3(n->right);
 	return ns && ls && rs;
 }
 
@@ -689,11 +674,9 @@ int calculate_black_height(RNode* n)
 {
 	if (n == nullptr)
 		return 1;
-	int lbh, rbh;
-	lbh = calculate_black_height(n->left);
-	rbh = calculate_black_height(n->right);
+	int lbh = calculate_black_height(n->left);
+	int rbh = calculate_black_height(n->right);
 	if (n->color == node_colors::BLACK)
 		return (1 + std::max(lbh, rbh));
-	else
-		return std::max(lbh, rbh);
+	return std::max(lbh, rbh);
 }
